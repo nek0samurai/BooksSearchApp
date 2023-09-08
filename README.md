@@ -8,5 +8,4 @@ __Технологии:__
 - React-Router
 - Google Books API
 - Axios
-- Lodash
-- mUI
+
