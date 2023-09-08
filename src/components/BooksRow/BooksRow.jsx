@@ -1,49 +1,51 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { foundedBooks } from '../../redux/slices/bookSlice';
 import Loader from '../Loader/Loader';
 import BooksCard from './BooksCard/BooksCard';
-// import LoadMore from '../Pagination/Pagination';
 
 import style from './BooksCard/BooksCard.module.css';
-import { Link } from 'react-router-dom';
+
 import LoadMore from '../LoadMore/LoadMore';
 
 const BooksRow = () => {
-  const { error, loading, success, totalBooks, booksData } = useSelector((state) => state.book);
-  const foundedBooksData = useSelector(foundedBooks);
+	const { error, loading, success, totalBooks, booksData, message } = useSelector(
+		(state) => state.book,
+	);
+	const [bookData, setBookData] = useState([]);
+	const { search, category } = useSelector((state) => state.filter);
 
-  const [bookData, setBookData] = useState([]);
+	const foundedBooksData = useSelector(foundedBooks);
 
-  const dispatch = useDispatch();
+	const filteredBookData = booksData.filter((product) =>
+		product.volumeInfo.categories?.[0].toLowerCase().includes(category),
+	);
 
-  console.log(bookData);
+	console.log(filteredBookData);
 
-  useEffect(() => {
-    if (success) {
-      setBookData(foundedBooksData);
-    }
-  }, [foundedBooksData, dispatch, error, success, totalBooks]);
+	useEffect(() => {
+		if (success) {
+			setBookData(foundedBooksData);
+		}
+	}, [error, success, totalBooks]);
 
-  return (
-    <>
-      <h1 className={style.title}>
-        {bookData.length === 0 ? 'Начните поиск' : `Найдено ${totalBooks}`}
-      </h1>
+	return (
+		<div className={style.container}>
+			<h1 className={style.title}>{!totalBooks ? '' : `Найдено всего ${totalBooks}`}</h1>
 
-      {loading ? (
-        <Loader />
-      ) : (
-        <section className={style.row}>
-          <BooksCard books={booksData}></BooksCard>
-        </section>
-      )}
-      {bookData.length === 0 ? <></> : <LoadMore></LoadMore>}
-    </>
-  );
+			{loading ? (
+				<Loader />
+			) : (
+				<section className={style.row}>
+					<BooksCard books={category === 'all' ? booksData : filteredBookData}></BooksCard>
+				</section>
+			)}
+			{bookData.length === 0 ? <></> : <LoadMore></LoadMore>}
+		</div>
+	);
 };
 
 export default BooksRow;

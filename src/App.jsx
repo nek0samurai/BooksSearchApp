@@ -6,15 +6,15 @@ import { Route, Routes } from 'react-router-dom';
 import BookDetail from './pages/BookDetail/BookDetail';
 
 function App() {
-  return (
-    <Routes>
-      <Route index element={<Home />}></Route>
-      <Route path="/:code" element={<BookDetail />}></Route>
-      {/* <Route path="/" element={<Header />}>
-        
-      </Route> */}
-    </Routes>
-  );
+	return (
+		<>
+			<Header></Header>
+			<Routes>
+				<Route index element={<Home />}></Route>
+				<Route path="/:code" element={<BookDetail />}></Route>
+			</Routes>
+		</>
+	);
 }
 
 export default App;

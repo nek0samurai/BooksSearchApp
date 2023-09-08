@@ -1,43 +1,53 @@
 import React from 'react';
-import debounce from 'lodash.debounce';
-import { useState, useRef, useCallback } from 'react';
+
+import { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { fetchBooks } from '../../redux/actions/bookActions';
+import { setSearch } from '../../redux/slices/filterSlice';
+import style from './Search.module.css';
 
-import { style } from './Search.css';
+const Search = () => {
+	const dispatch = useDispatch();
+	const { sort, search, startIndex, category } = useSelector((state) => state.filter);
 
-const Search = ({ props }) => {
-  const { startIndex, searchValue } = props;
+	// const { startIndex } = props;
 
-  const dispatch = useDispatch();
-  const inputRef = useRef('');
-  const [value, setValue] = useState('');
+	const inputRef = useRef('');
+	const [value, setValue] = useState('');
+	// const [queryValue, setQueryValue] = useState('');
 
-  const updateInputValue = useCallback(
-    debounce((searchValue) => {
-      dispatch(fetchBooks({ searchValue, startIndex }));
-    }, 1000),
-    [],
-  );
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		dispatch(setSearch(value));
+		getBooks();
+	};
+	const getBooks = async () => {
+		dispatch(fetchBooks({ search, sort, startIndex }));
+	};
 
-  const handleInputValue = (event) => {
-    setValue(event.target.value);
-    updateInputValue(event.target.value);
-  };
+	const handleInputValue = (event) => {
+		setValue(event.target.value);
+	};
 
-  return (
-    <>
-      <input
-        value={value}
-        ref={inputRef}
-        onChange={handleInputValue}
-        placeholder="Введите название"
-        type="text"
-        className="input"
-      />
-    </>
-  );
+	useEffect(() => {
+		getBooks();
+	}, [sort, search, startIndex, category]);
+
+	return (
+		<>
+			<form onSubmit={handleSubmit}>
+				<input
+					value={value}
+					ref={inputRef}
+					onChange={handleInputValue}
+					placeholder="Введите название"
+					type="text"
+					className={style.input}
+				/>
+			</form>
+		</>
+	);
 };
 
 export default Search;

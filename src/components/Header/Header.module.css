@@ -1,0 +1,32 @@
+.header {
+    background: linear-gradient(rgba(39, 138, 174, 0.3), rgba(39, 41, 174, 0.5)),
+        url(../../images/library-bg.webp) center/cover no-repeat;
+    padding-bottom: 3rem;
+}
+
+.container {
+    max-width: 1220px;
+    margin: auto;
+}
+
+.main__info {
+    color: #fff;
+
+    max-width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.main__title {
+    text-align: center;
+    font-size: 2.4rem;
+}
+
+.main__text {
+    font-size: 1.2rem;
+    text-align: center;
+}
